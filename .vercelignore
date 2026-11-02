@@ -1,0 +1,4 @@
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+/storage/*.key
+.env*
