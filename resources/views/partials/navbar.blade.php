@@ -126,12 +126,12 @@
 
         <div class="space-y-1 pl-3 border-l-2 border-slate-200">
             <span class="block px-3 py-1 text-[11px] text-slate-400 uppercase tracking-wider font-extrabold">Tentang Kami</span>
-            <a href="/sejarah" class="block px-3 py-1.5 rounded-lg hover:bg-slate-100">Sejarah Sekolah</a>
+            <a href="/history" class="block px-3 py-1.5 rounded-lg hover:bg-slate-100">Sejarah Sekolah</a>
             <a href="/visi-misi-motto" class="block px-3 py-1.5 rounded-lg hover:bg-slate-100">Visi, Misi & Motto</a>
             <a href="/program-unggulan" class="block px-3 py-1.5 rounded-lg hover:bg-slate-100">Program Unggulan</a>
             <a href="/fasilitas" class="block px-3 py-1.5 rounded-lg hover:bg-slate-100">Fasilitas Sekolah</a>
             <a href="/pencapaian" class="block px-3 py-1.5 rounded-lg hover:bg-slate-100">Pencapaian & Prestasi</a>
-            <a href="/testimoni-orang-tua-siswa" class="block px-3 py-1.5 rounded-lg hover:bg-slate-100">Testimoni Orang Tua</a>
+            <a href="/testimoni" class="block px-3 py-1.5 rounded-lg hover:bg-slate-100">Testimoni Orang Tua</a>
         </div>
 
         <div class="space-y-1 pl-3 border-l-2 border-slate-200">

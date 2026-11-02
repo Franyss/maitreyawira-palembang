@@ -173,7 +173,7 @@
                             Menanamkan kebiasaan positif, kemandirian awal, serta kecintaan belajar melalui metode eksplorasi yang menyenangkan.
                         </p>
                     </div>
-                    <a href="#" class="text-[#1b2a6b] font-bold text-xs inline-flex items-center justify-center gap-2 group-hover:translate-x-1 transition">
+                    <a href="/sekolah#tk" class="text-[#1b2a6b] font-bold text-xs inline-flex items-center justify-center gap-2 group-hover:translate-x-1 transition">
                         <span>Detail Program TK</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </a>
@@ -191,7 +191,7 @@
                             Pondasi kuat literasi, numerasi, pemahaman nilai-nilai etika, bahasa asing, serta kepedulian lingkungan.
                         </p>
                     </div>
-                    <a href="#" class="text-[#1b2a6b] font-bold text-xs inline-flex items-center justify-center gap-2 group-hover:translate-x-1 transition">
+                    <a href="/sekolah#sd" class="text-[#1b2a6b] font-bold text-xs inline-flex items-center justify-center gap-2 group-hover:translate-x-1 transition">
                         <span>Detail Program SD</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </a>
@@ -209,7 +209,7 @@
                             Pengembangan bakat, logika sains, penguasaan teknologi informasi, kepemimpinan, dan kegiatan ekstrakurikuler.
                         </p>
                     </div>
-                    <a href="#" class="text-[#1b2a6b] font-bold text-xs inline-flex items-center justify-center gap-2 group-hover:translate-x-1 transition">
+                    <a href="/sekolah#smp" class="text-[#1b2a6b] font-bold text-xs inline-flex items-center justify-center gap-2 group-hover:translate-x-1 transition">
                         <span>Detail Program SMP</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </a>
@@ -227,7 +227,7 @@
                             Persiapan matang menuju Perguruan Tinggi ternama, riset ilmiah, jiwa wirausaha, serta kematangan moral.
                         </p>
                     </div>
-                    <a href="#" class="text-[#1b2a6b] font-bold text-xs inline-flex items-center justify-center gap-2 group-hover:translate-x-1 transition">
+                    <a href="/sekolah#sma" class="text-[#1b2a6b] font-bold text-xs inline-flex items-center justify-center gap-2 group-hover:translate-x-1 transition">
                         <span>Detail Program SMA</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </a>
@@ -311,7 +311,7 @@
                         Berita & Kegiatan Terbaru
                     </h2>
                 </div>
-                <a href="#" class="px-5 py-2.5 bg-white hover:bg-slate-100 text-blue-600 font-bold text-xs rounded-xl border border-slate-200 shadow-sm transition">
+                <a href="/berita" class="px-5 py-2.5 bg-white hover:bg-slate-100 text-blue-600 font-bold text-xs rounded-xl border border-slate-200 shadow-sm transition">
                     Lihat Arsip Berita &rarr;
                 </a>
             </div>
@@ -335,7 +335,7 @@
                         </div>
                     </div>
                     <div class="px-6 pb-6 pt-2">
-                        <a href="#" class="text-blue-600 font-bold text-xs hover:underline inline-flex items-center gap-1">
+                        <a href="/berita" class="text-blue-600 font-bold text-xs hover:underline inline-flex items-center gap-1">
                             Baca Selengkapnya &rarr;
                         </a>
                     </div>
@@ -359,7 +359,7 @@
                         </div>
                     </div>
                     <div class="px-6 pb-6 pt-2">
-                        <a href="#" class="text-blue-600 font-bold text-xs hover:underline inline-flex items-center gap-1">
+                        <a href="/berita" class="text-blue-600 font-bold text-xs hover:underline inline-flex items-center gap-1">
                             Baca Selengkapnya &rarr;
                         </a>
                     </div>
@@ -383,7 +383,7 @@
                         </div>
                     </div>
                     <div class="px-6 pb-6 pt-2">
-                        <a href="#" class="text-blue-600 font-bold text-xs hover:underline inline-flex items-center gap-1">
+                        <a href="/berita" class="text-blue-600 font-bold text-xs hover:underline inline-flex items-center gap-1">
                             Baca Selengkapnya &rarr;
                         </a>
                     </div>

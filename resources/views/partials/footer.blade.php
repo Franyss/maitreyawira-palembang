@@ -17,10 +17,10 @@
                 Jenjang Pendidikan
             </h4>
             <ul class="space-y-2.5 text-xs">
-                <li><a href="#" class="hover:text-amber-400 transition">Taman Kanak-Kanak (TK)</a></li>
-                <li><a href="#" class="hover:text-amber-400 transition">Sekolah Dasar (SD)</a></li>
-                <li><a href="#" class="hover:text-amber-400 transition">Sekolah Menengah Pertama (SMP)</a></li>
-                <li><a href="#" class="hover:text-amber-400 transition">Sekolah Menengah Atas (SMA)</a></li>
+                <li><a href="/sekolah#tk" class="hover:text-amber-400 transition">Taman Kanak-Kanak (TK)</a></li>
+                <li><a href="/sekolah#sd" class="hover:text-amber-400 transition">Sekolah Dasar (SD)</a></li>
+                <li><a href="/sekolah#smp" class="hover:text-amber-400 transition">Sekolah Menengah Pertama (SMP)</a></li>
+                <li><a href="/sekolah#sma" class="hover:text-amber-400 transition">Sekolah Menengah Atas (SMA)</a></li>
             </ul>
         </div>
 
@@ -29,10 +29,10 @@
                 Akses Cepat
             </h4>
             <ul class="space-y-2.5 text-xs">
-                <li><a href="#" class="hover:text-amber-400 transition">Pendaftaran PPDB Online</a></li>
-                <li><a href="#" class="hover:text-amber-400 transition">Portal Sistem Informasi Sekolah</a></li>
-                <li><a href="#" class="hover:text-amber-400 transition">Kalender Akademik</a></li>
-                <li><a href="#" class="hover:text-amber-400 transition">Galeri & Fasilitas Kampus</a></li>
+                <li><a href="/pendaftaran-siswa" class="hover:text-amber-400 transition">Pendaftaran PPDB Online</a></li>
+                <li><a href="/data" class="hover:text-amber-400 transition">Portal Sistem Informasi Sekolah</a></li>
+                <li><a href="/berita" class="hover:text-amber-400 transition">Kalender Akademik</a></li>
+                <li><a href="/galeri" class="hover:text-amber-400 transition">Galeri & Fasilitas Kampus</a></li>
             </ul>
         </div>
 
