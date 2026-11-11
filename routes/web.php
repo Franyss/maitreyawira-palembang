@@ -19,11 +19,36 @@ use App\Http\Controllers\VisiMisiController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\KonsultasiController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 // --- HALAMAN UTAMA & PUBLIK ---
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/users', [UserController::class, 'index']);
+
+// --- RUTE VERIFIKASI KONEKSI DATABASE SUPABASE ---
+Route::get('/db-check', function () {
+    try {
+        $dbName = DB::connection()->getDatabaseName();
+        $schoolsCount = DB::table('school')->count();
+        $configsCount = DB::table('app_config')->count();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Berhasil terhubung ke Supabase ($dbName)",
+            'data' => [
+                'total_sekolah' => $schoolsCount,
+                'total_config' => $configsCount,
+            ]
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Gagal terhubung ke Supabase',
+            'error_detail' => $e->getMessage()
+        ], 500);
+    }
+});
 
 // --- NAVIGASI PROFIL & INFORMASI PUBLIK ---
 Route::get('/sejarah', [SejarahController::class, 'index'])->name('sejarah.index');
@@ -48,7 +73,7 @@ Route::get('/pendaftaran-siswa', [PendaftaranSiswaController::class, 'index'])->
 Route::get('/pendaftaran-siswa-form', [PendaftaranSiswaController::class, 'form'])->name('pendaftaran-siswa.form');
 Route::get('/pendaftaran-siswa/form', function () {
     return redirect()->away('https://spmb.maitreyawira-palembang.sch.id');
-})->name('pendaftaran-siswa.form');
+})->name('pendaftaran-siswa.redirect');
 Route::get('/pendaftaran-beasiswa', [BeasiswaController::class, 'index'])->name('pendaftaran-beasiswa.index');
 Route::post('/pendaftaran-beasiswa', [BeasiswaController::class, 'store'])->name('pendaftaran-beasiswa.store');
 Route::get('/rekrutmen', [RekrutmenController::class, 'index'])->name('rekrutmen.index');
