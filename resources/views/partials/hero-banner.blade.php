@@ -16,7 +16,7 @@
     $breadcrumbs = is_array($breadcrumbs) ? $breadcrumbs : [];
     $bgImage = $bgImage ?? '';
 
-    // 1. Tentukan nama file gambar dari props bgImage (sch_background_header) atau dari database AppMenu
+    // 1. Tentukan String Path Gambar dari Props (bgImage) atau AppMenu
     if (!empty($bgImage) && $bgImage !== '-') {
         $rawBg = trim($bgImage);
     } else {
@@ -26,7 +26,7 @@
 
     $fileName = basename($rawBg);
 
-    // 2. Pencarian lokasi fisik file gambar di server (Support multi-folder uploads)
+    // 2. Penelusuran Lokasi Berkas Gambar di Server (Support Multi-folder Uploads)
     if (empty($rawBg) || $rawBg === '-') {
         $headerBgUrl = asset('images/slider-ppdb.jpg');
     } elseif (str_starts_with($rawBg, 'http://') || str_starts_with($rawBg, 'https://')) {
@@ -49,7 +49,6 @@
             : asset('storage/' . $rawBg);
     }
 
-    $textColorClass = 'text-white';
     $displayTitle = !empty($title) ? $title : ($menu->title ?? '');
 @endphp
 
@@ -61,7 +60,7 @@
              class="w-full h-full object-cover object-center filter brightness-90"
              onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
 
-        <!-- OVERLAY GELAP PEKAT & BLUR AGAR TEKS BROWSER/BROSUR LATAR BELAKANG TIDAK BERTABRAKAN -->
+        <!-- OVERLAY SLATE GELAP PEKAT UNTUK MENJAGA KONTRAS TEKS -->
         <div class="absolute inset-0 bg-slate-950/85 backdrop-blur-[2px] z-10"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent z-10"></div>
     </div>
@@ -89,7 +88,7 @@
                 </span>
             @endif
 
-            <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight {{ $textColorClass }} drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]">
+            <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]">
                 {{ $displayTitle }}
                 @if(!empty($highlight))
                     <br>
