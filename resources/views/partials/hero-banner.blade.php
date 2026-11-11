@@ -26,27 +26,29 @@
 
     $fileName = basename($rawBg);
 
-    // 2. Penelusuran Lokasi Berkas Gambar di Server (Support Multi-folder Uploads)
+    // 2. Resolusi Path URL Gambar (Support Vercel & Struktur Uploads Laravel)
     if (empty($rawBg) || $rawBg === '-') {
         $headerBgUrl = asset('images/slider-ppdb.jpg');
     } elseif (str_starts_with($rawBg, 'http://') || str_starts_with($rawBg, 'https://')) {
         $headerBgUrl = $rawBg;
-    } elseif (file_exists(public_path($rawBg))) {
-        $headerBgUrl = asset($rawBg);
-    } elseif (file_exists(public_path('storage/' . $rawBg))) {
-        $headerBgUrl = asset('storage/' . $rawBg);
-    } elseif (!empty($fileName) && file_exists(public_path('uploads/school/' . $fileName))) {
-        $headerBgUrl = asset('uploads/school/' . $fileName);
-    } elseif (!empty($fileName) && file_exists(public_path('uploads/app_menu/' . $fileName))) {
-        $headerBgUrl = asset('uploads/app_menu/' . $fileName);
-    } elseif (!empty($fileName) && file_exists(public_path('uploads/' . $fileName))) {
-        $headerBgUrl = asset('uploads/' . $fileName);
-    } elseif (!empty($fileName) && file_exists(public_path('images/' . $fileName))) {
-        $headerBgUrl = asset('images/' . $fileName);
     } else {
-        $headerBgUrl = file_exists(public_path('storage/uploads/school/' . $fileName))
-            ? asset('storage/uploads/school/' . $fileName)
-            : asset('storage/' . $rawBg);
+        $cleanPath = ltrim($rawBg, '/');
+        if (file_exists(public_path($cleanPath))) {
+            $headerBgUrl = asset($cleanPath);
+        } elseif (file_exists(public_path('storage/' . $cleanPath))) {
+            $headerBgUrl = asset('storage/' . $cleanPath);
+        } elseif (!empty($fileName) && file_exists(public_path('uploads/school/' . $fileName))) {
+            $headerBgUrl = asset('uploads/school/' . $fileName);
+        } elseif (!empty($fileName) && file_exists(public_path('uploads/app_menu/' . $fileName))) {
+            $headerBgUrl = asset('uploads/app_menu/' . $fileName);
+        } elseif (!empty($fileName) && file_exists(public_path('uploads/' . $fileName))) {
+            $headerBgUrl = asset('uploads/' . $fileName);
+        } elseif (str_starts_with($cleanPath, 'uploads/')) {
+            $headerBgUrl = asset($cleanPath);
+        } else {
+            // Default path untuk berkas gambar unit sekolah dari database
+            $headerBgUrl = asset('uploads/school/' . $fileName);
+        }
     }
 
     $displayTitle = !empty($title) ? $title : ($menu->title ?? '');
@@ -57,12 +59,11 @@
     <div class="absolute inset-0 z-0">
         <img src="{{ $headerBgUrl }}"
              alt="Header Background"
-             class="w-full h-full object-cover object-center filter brightness-90"
+             class="w-full h-full object-cover object-center"
              onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
 
-        <!-- OVERLAY SLATE GELAP PEKAT UNTUK MENJAGA KONTRAS TEKS -->
-        <div class="absolute inset-0 bg-slate-950/85 backdrop-blur-[2px] z-10"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent z-10"></div>
+        <!-- OVERLAY GRADIENT SEIMBANG (TEKS TERBACA JELAS & GAMBAR LATAR TETAP WARNA-WARNI TERLIHAT) -->
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/50 to-slate-950/20 z-10"></div>
     </div>
 
     <!-- KONTEN TEKS HERO & BREADCRUMB -->
