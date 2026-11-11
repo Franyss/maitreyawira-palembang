@@ -7,12 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sekolah Maitreyawira Palembang | Official Website</title>
 
-    {{-- Fallback CDN Tailwind & CSS FontAwesome / AOS --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- CSS AOS & Tailwind --}}
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite('resources/css/app.css')
 
     {{-- Alpine.js & Typed.js --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -24,7 +22,7 @@
     {{-- 1. PANGGIL PARTIAL NAVBAR --}}
     @include('partials.navbar')
 
-    {{-- 2. HERO SLIDER SECTION (FULL-WIDTH EDGE-TO-EDGE STYLE) --}}
+    {{-- 2. HERO SLIDER SECTION (FULL-WIDTH EDGE-TO-EDGE STYLE ITB) --}}
     <section class="relative w-full bg-slate-900 overflow-hidden">
 
         @php
@@ -65,7 +63,7 @@
                             } elseif (file_exists(public_path('images/' . $fileName))) {
                                 $imgUrl = asset('images/' . $fileName);
                             } else {
-                                $imgUrl = asset('images/slider-ppdb.jpg');
+                                $imgUrl = asset('storage/uploads/app_slider/' . $fileName);
                             }
                         }
                     @endphp
@@ -222,7 +220,6 @@
             </div>
 
             @php
-                $configs = $configs ?? [];
                 $getLogoUrl = function($key, $default) use ($configs) {
                     $val = trim($configs[$key] ?? '');
                     if (empty($val)) return asset($default);
@@ -230,7 +227,7 @@
                     if (file_exists(public_path('storage/' . $val))) return asset('storage/' . $val);
                     if (file_exists(public_path($val))) return asset($val);
                     if (file_exists(public_path('uploads/app_config/' . basename($val)))) return asset('uploads/app_config/' . basename($val));
-                    return asset($default);
+                    return asset('storage/' . $val);
                 };
             @endphp
 
@@ -443,7 +440,7 @@
                                         {{ $item->title }}
                                     </h3>
                                     <p class="text-slate-600 text-xs line-clamp-3 leading-relaxed">
-                                        {{ \Illuminate\Support\Str::limit(strip_tags($item->content), 90) }}
+                                        {{ Str::limit(strip_tags($item->content), 90) }}
                                     </p>
                                 </div>
                             </div>
@@ -465,7 +462,7 @@
         </div>
     </section>
 
-    {{-- 7. SEKSI KHUSUS PRESTASI TERKINI --}}
+    {{-- 7. SEKSI KHUSUS PRESTASI TERKINI (KONSISTEN DENGAN TEMA TERANG HALAMAN APLIKASI) --}}
     <section id="prestasi" class="py-20 bg-slate-50 border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-wrap justify-between items-end mb-12 gap-4" data-aos="fade-up">
