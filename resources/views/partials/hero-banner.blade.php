@@ -9,31 +9,44 @@
 ])
 
 @php
-    $slug = $slug ?? '';
-    $badge = $badge ?? '';
-    $title = $title ?? '';
-    $highlight = $highlight ?? '';
-    $breadcrumbs = $breadcrumbs ?? [];
-    $bgImage = $bgImage ?? '';
+    $slug =$slug ?? '';
+    $badge =$badge ?? '';
+    $title =$title ?? '';
+    $highlight =$highlight ?? '';
+    $breadcrumbs =$breadcrumbs ?? [];
+    $bgImage =$bgImage ?? '';
 
-    // Resolusi Gambar Latar Belakang (Dukungan Custom bgImage / AppMenu)
-    if (!empty($bgImage) && $bgImage !== '-') {
-        $bgHeader = trim($bgImage);
+    // 1. Tentukan String Path Gambar dari Props (sch_background_header) atau AppMenu
+    if (!empty($bgImage) &&$bgImage !== '-') {
+        $rawBg = trim($bgImage);
     } else {
-        $menu = \App\Models\AppMenu::where('slug', $slug)->first();
-        $bgHeader = trim($menu->background_header ?? '');
+        $menu = \App\Models\AppMenu::where('slug',$slug)->first();
+        $rawBg = trim($menu->background_header ?? '');
     }
 
-    if (empty($bgHeader) || $bgHeader === '-') {
-        $headerBgUrl = asset('images/slider-ppdb.jpg');
-    } elseif (str_starts_with($bgHeader, 'http://') || str_starts_with($bgHeader, 'https://')) {
-        $headerBgUrl = $bgHeader;
-    } elseif (file_exists(public_path('storage/' . $bgHeader))) {
-        $headerBgUrl = asset('storage/' . $bgHeader);
-    } elseif (file_exists(public_path($bgHeader))) {
-        $headerBgUrl = asset($bgHeader);
+    $fileName = basename($rawBg);
+
+    // 2. Pencarian Lokasi Berkas Gambar Secara Kompleks (Support Multi-folder Uploads)
+    if (empty($rawBg) || $rawBg === '-') {$headerBgUrl = asset('images/slider-ppdb.jpg');
+    } elseif (str_starts_with($rawBg, 'http://') \vert{}\vert{} str_starts_with($rawBg, 'https://')) {
+        $headerBgUrl =$rawBg;
+    } elseif (file_exists(public_path($rawBg))) {
+        $headerBgUrl = asset($rawBg);
+    } elseif (file_exists(public_path('storage/' . $rawBg))) {
+        $headerBgUrl = asset('storage/' .$rawBg);
+    } elseif (!empty($fileName) && file_exists(public_path('uploads/school/' .$fileName))) {
+        $headerBgUrl = asset('uploads/school/' .$fileName);
+    } elseif (!empty($fileName) && file_exists(public_path('uploads/app_menu/' .$fileName))) {
+        $headerBgUrl = asset('uploads/app_menu/' .$fileName);
+    } elseif (!empty($fileName) && file_exists(public_path('uploads/' .$fileName))) {
+        $headerBgUrl = asset('uploads/' .$fileName);
+    } elseif (!empty($fileName) && file_exists(public_path('images/' .$fileName))) {
+        $headerBgUrl = asset('images/' .$fileName);
     } else {
-        $headerBgUrl = asset('storage/' . $bgHeader);
+        // Fallback default path jika file fisik di direktori publik belum terisi
+        $headerBgUrl = file_exists(public_path('storage/uploads/school/' .$fileName))
+            ? asset('storage/uploads/school/' . $fileName)
+            : asset('storage/' . $rawBg);
     }
 
     $textColorClass = 'text-white';
@@ -48,7 +61,7 @@
              class="w-full h-full object-cover object-center"
              onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
 
-        <!-- OVERLAY SLATE GELAP PEKAT (KONSISTEN UNTUK SEMUA HALAMAN) -->
+        <!-- OVERLAY SLATE GELAP PEKAT UNTUK MENJAGA KONTRAS TEKS -->
         <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-950/50 z-10"></div>
     </div>
 
@@ -57,9 +70,9 @@
         @if(!empty($breadcrumbs) && is_array($breadcrumbs))
             <nav class="flex text-xs font-semibold text-slate-300 mb-4 gap-2 items-center flex-wrap drop-shadow-sm">
                 <a href="/" class="hover:text-amber-400 transition">Beranda</a>
-                @foreach($breadcrumbs as $crumb)
+                @foreach($breadcrumbs as$crumb)
                     <span class="text-slate-500">/</span>
-                    @if(!empty($crumb['url']) && $crumb['url'] !== '#')
+                    @if(!empty($crumb['url']) &&$crumb['url'] !== '#')
                         <a href="{{ $crumb['url'] }}" class="hover:text-amber-400 transition">{{ $crumb['label'] }}</a>
                     @else
                         <span class="text-amber-400 font-bold">{{ $crumb['label'] }}</span>

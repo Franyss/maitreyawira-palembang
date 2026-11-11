@@ -29,7 +29,7 @@
         </header>
     @endif
 
-    {{-- 2. HERO BANNER SEKOLAH (DIPANGGIL DARI PARTIAL KONSISTEN) --}}
+    {{-- 2. HERO BANNER SEKOLAH (MENGAMBIL GAMBAR DARI sch_background_header TABEL SCHOOL) --}}
     @include('partials.hero-banner', [
         'slug' => 'sekolah',
         'badge' => 'PROFIL UNIT SEKOLAH',
