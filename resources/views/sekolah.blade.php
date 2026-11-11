@@ -29,18 +29,72 @@
         </header>
     @endif
 
-    {{-- 2. HERO BANNER SEKOLAH (MEMANGGIL HERO-BANNER PARTIAL) --}}
-    @include('partials.hero-banner', [
-        'slug' => 'sekolah',
-        'badge' => 'PROFIL UNIT SEKOLAH',
-        'title' => 'Profil & Informasi',
-        'highlight' => $school->sch_name ?? '',
-        'bgImage' => $school->sch_background_header ?? '',
-        'breadcrumbs' => [
-            ['label' => 'Sekolah', 'url' => '#'],
-            ['label' => $school->sch_name ?? '', 'url' => '#']
-        ]
-    ])
+    {{-- 2. HERO BANNER SEKOLAH (DENGAN TINGGI RESPOSIF PROPORSI 1920 x 480 PX) --}}
+    @php
+        // Ambil data background header dari AppMenu (slug: sekolah) atau fallback dari data sekolah
+        $menu = \App\Models\AppMenu::where('slug', 'sekolah')->first();
+        $bgHeader = trim($menu->background_header ?? $school->sch_background_header ?? '');
+
+        if (empty($bgHeader) || $bgHeader === '-') {
+            $headerBgUrl = asset('images/slider-ppdb.jpg');
+        } elseif (str_starts_with($bgHeader, 'http://') || str_starts_with($bgHeader, 'https://')) {
+            $headerBgUrl = $bgHeader;
+        } elseif (file_exists(public_path('storage/' . $bgHeader))) {
+            $headerBgUrl = asset('storage/' . $bgHeader);
+        } elseif (file_exists(public_path($bgHeader))) {
+            $headerBgUrl = asset($bgHeader);
+        } else {
+            $headerBgUrl = asset('storage/' . $bgHeader);
+        }
+
+        $textColorClass = !empty($school->sch_font_color) ? $school->sch_font_color : 'text-white';
+
+        // Definisi Variabel Teks Header Khusus Sekolah
+        $badge = 'PROFIL UNIT SEKOLAH';
+        $displayTitle = 'Profil & Informasi';
+        $highlight = $school->sch_name ?? '';
+    @endphp
+
+    <section class="relative bg-slate-950 text-white overflow-hidden h-[300px] sm:h-[400px] lg:h-[480px] flex items-center">
+        <!-- GAMBAR BACKGROUND HEADER -->
+        <div class="absolute inset-0 z-0">
+            <img src="{{ $headerBgUrl }}" alt="{{ $school->sch_name }}"
+                class="w-full h-full object-cover object-center"
+                onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
+
+            <!-- OVERLAY SLATE NETRAL -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/60 to-transparent z-10"></div>
+        </div>
+
+        <!-- KONTEN TEKS HERO & BREADCRUMB -->
+        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
+            <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center flex-wrap drop-shadow-sm">
+                <a href="/" class="hover:text-amber-400 transition">Beranda</a>
+                <span>/</span>
+                <span class="text-slate-400">Sekolah</span>
+                <span>/</span>
+                <span class="text-amber-400 font-bold">{{ $school->sch_name }}</span>
+            </nav>
+
+            <div class="max-w-3xl space-y-4">
+                @if (!empty($badge))
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-amber-500/10 text-amber-400 border border-amber-500/30 uppercase tracking-widest shadow-xs">
+                        {{ $badge }}
+                    </span>
+                @endif
+
+                <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight {{ $textColorClass }} drop-shadow-lg">
+                    {{ $displayTitle }}
+                    @if (!empty($highlight))
+                        <br>
+                        <span class="text-amber-400 font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                            {{ $highlight }}
+                        </span>
+                    @endif
+                </h1>
+            </div>
+        </div>
+    </section>
 
     {{-- 3. KONTEN UTAMA & INFORMASI KONTAK UNIT --}}
     <section class="py-16 bg-slate-50 flex-grow">
@@ -84,14 +138,16 @@
                             @if (!empty($school->sch_opening_speech))
                                 {!! $school->sch_opening_speech !!}
                             @else
-                                <p class="text-slate-400 italic">Belum ada deskripsi sambutan untuk unit sekolah ini.</p>
+                                <p class="text-slate-400 italic">Belum ada deskripsi sambutan untuk unit sekolah ini.
+                                </p>
                             @endif
                         </div>
 
                         <!-- Tombol Pendaftaran Langsung -->
                         <div class="pt-4 border-t border-slate-100 flex items-center justify-between" data-aos="fade-up"
                             data-aos-delay="350">
-                            <span class="text-xs font-bold text-slate-500">Tertarik bergabung dengan {{ $school->sch_name }}?</span>
+                            <span class="text-xs font-bold text-slate-500">Tertarik bergabung dengan
+                                {{ $school->sch_name }}?</span>
                             <a href="{{ route('pendaftaran-siswa.index') }}"
                                 class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2 transform hover:-translate-y-0.5">
                                 <i class="fa-solid fa-user-plus"></i>
@@ -107,14 +163,16 @@
 
                     <!-- Kartu Informasi Kontak Unit -->
                     <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-5">
-                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3 flex items-center gap-2">
+                        <h3
+                            class="text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3 flex items-center gap-2">
                             <i class="fa-solid fa-building text-blue-600"></i> Kontak Unit {{ $school->sch_name }}
                         </h3>
 
                         <div class="space-y-4 text-xs text-slate-700">
                             <!-- Alamat Sekolah (sch_address) -->
                             <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">
                                     <i class="fa-solid fa-location-dot"></i>
                                 </div>
                                 <div>
@@ -127,7 +185,8 @@
 
                             <!-- Telepon Sekolah (sch_phone) -->
                             <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm shrink-0">
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm shrink-0">
                                     <i class="fa-solid fa-phone"></i>
                                 </div>
                                 <div>
@@ -141,7 +200,8 @@
                     </div>
 
                     <!-- Widget Call-to-Action PPDB -->
-                    <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl p-6 text-slate-900 shadow-md space-y-4">
+                    <div
+                        class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl p-6 text-slate-900 shadow-md space-y-4">
                         <div class="font-black text-lg leading-tight">
                             Bergabung Bersama Keluarga Maitreyawira!
                         </div>
