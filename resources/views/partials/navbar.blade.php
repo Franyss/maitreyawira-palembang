@@ -1,11 +1,21 @@
 {{-- File: resources/views/partials/navbar.blade.php --}}
+{{-- File: resources/views/partials/navbar.blade.php --}}
 @php
-    // Ambil logo brand dari database app_config berdasarkan key app_logo
-    $logoVal = trim(\Illuminate\Support\Facades\DB::table('app_config')
-        ->where('conf_key', 'app_logo')
-        ->value('conf_value') ?? '');
+    $logoVal = '';
+    $schools = collect();
 
-    // Resolusi Jalur Gambar Logo (Storage vs Public vs External URL vs Fallback)
+    // Bungkus query DB dengan try-catch agar tidak crash saat DB offline di Vercel
+    try {
+        $logoVal = trim(\Illuminate\Support\Facades\DB::table('app_config')
+            ->where('conf_key', 'app_logo')
+            ->value('conf_value') ?? '');
+        $schools = \Illuminate\Support\Facades\DB::table('school')->get();
+    } catch (\Throwable $e) {
+        $logoVal = '';
+        $schools = collect();
+    }
+
+    // Resolusi Jalur Gambar Logo
     if (empty($logoVal)) {
         $navbarLogoUrl = asset('images/logo-smw.png');
     } elseif (str_starts_with($logoVal, 'http://') || str_starts_with($logoVal, 'https://')) {
@@ -17,11 +27,8 @@
     } elseif (file_exists(public_path('uploads/app_config/' . basename($logoVal)))) {
         $navbarLogoUrl = asset('uploads/app_config/' . basename($logoVal));
     } else {
-        $navbarLogoUrl = asset('storage/' . $logoVal);
+        $navbarLogoUrl = asset('images/logo-smw.png');
     }
-
-    // Ambil daftar sekolah dinamis dari tabel `school`
-    $schools = \Illuminate\Support\Facades\DB::table('school')->get();
 @endphp
 
 <header class="bg-white border-b border-slate-200/80 sticky top-0 z-50 shadow-xs">
