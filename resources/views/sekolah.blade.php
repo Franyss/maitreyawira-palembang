@@ -29,11 +29,11 @@
         </header>
     @endif
 
-    {{-- 2. HERO BANNER SEKOLAH (DENGAN TINGGI RESPOSIF PROPORSI 1920 x 480 PX) --}}
+    {{-- 2. HERO BANNER SEKOLAH (KONSISTEN DENGAN HERO-BANNER PARTIAL) --}}
     @php
-        // Ambil data background header dari AppMenu (slug: sekolah) atau fallback dari data sekolah
+        // Ambil data background header dari unit sekolah atau fallback dari AppMenu (slug: sekolah)
         $menu = \App\Models\AppMenu::where('slug', 'sekolah')->first();
-        $bgHeader = trim($menu->background_header ?? $school->sch_background_header ?? '');
+        $bgHeader = trim($school->sch_background_header ?? $menu->background_header ?? '');
 
         if (empty($bgHeader) || $bgHeader === '-') {
             $headerBgUrl = asset('images/slider-ppdb.jpg');
@@ -62,17 +62,17 @@
                 class="w-full h-full object-cover object-center"
                 onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
 
-            <!-- OVERLAY SLATE NETRAL -->
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/60 to-transparent z-10"></div>
+            <!-- OVERLAY SLATE GELAP AGAR TEKS BACKGROUND TIDAK BENTROK -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-slate-950/40 z-10"></div>
         </div>
 
         <!-- KONTEN TEKS HERO & BREADCRUMB -->
         <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
-            <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center flex-wrap drop-shadow-sm">
+            <nav class="flex text-xs font-semibold text-slate-300 mb-4 gap-2 items-center flex-wrap drop-shadow-sm">
                 <a href="/" class="hover:text-amber-400 transition">Beranda</a>
-                <span>/</span>
+                <span class="text-slate-400">/</span>
                 <span class="text-slate-400">Sekolah</span>
-                <span>/</span>
+                <span class="text-slate-400">/</span>
                 <span class="text-amber-400 font-bold">{{ $school->sch_name }}</span>
             </nav>
 
@@ -138,16 +138,14 @@
                             @if (!empty($school->sch_opening_speech))
                                 {!! $school->sch_opening_speech !!}
                             @else
-                                <p class="text-slate-400 italic">Belum ada deskripsi sambutan untuk unit sekolah ini.
-                                </p>
+                                <p class="text-slate-400 italic">Belum ada deskripsi sambutan untuk unit sekolah ini.</p>
                             @endif
                         </div>
 
                         <!-- Tombol Pendaftaran Langsung -->
                         <div class="pt-4 border-t border-slate-100 flex items-center justify-between" data-aos="fade-up"
                             data-aos-delay="350">
-                            <span class="text-xs font-bold text-slate-500">Tertarik bergabung dengan
-                                {{ $school->sch_name }}?</span>
+                            <span class="text-xs font-bold text-slate-500">Tertarik bergabung dengan {{ $school->sch_name }}?</span>
                             <a href="{{ route('pendaftaran-siswa.index') }}"
                                 class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2 transform hover:-translate-y-0.5">
                                 <i class="fa-solid fa-user-plus"></i>
@@ -163,16 +161,14 @@
 
                     <!-- Kartu Informasi Kontak Unit -->
                     <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-5">
-                        <h3
-                            class="text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3 flex items-center gap-2">
+                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3 flex items-center gap-2">
                             <i class="fa-solid fa-building text-blue-600"></i> Kontak Unit {{ $school->sch_name }}
                         </h3>
 
                         <div class="space-y-4 text-xs text-slate-700">
                             <!-- Alamat Sekolah (sch_address) -->
                             <div class="flex items-start gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">
+                                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">
                                     <i class="fa-solid fa-location-dot"></i>
                                 </div>
                                 <div>
@@ -185,8 +181,7 @@
 
                             <!-- Telepon Sekolah (sch_phone) -->
                             <div class="flex items-start gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm shrink-0">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm shrink-0">
                                     <i class="fa-solid fa-phone"></i>
                                 </div>
                                 <div>
@@ -200,8 +195,7 @@
                     </div>
 
                     <!-- Widget Call-to-Action PPDB -->
-                    <div
-                        class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl p-6 text-slate-900 shadow-md space-y-4">
+                    <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl p-6 text-slate-900 shadow-md space-y-4">
                         <div class="font-black text-lg leading-tight">
                             Bergabung Bersama Keluarga Maitreyawira!
                         </div>
