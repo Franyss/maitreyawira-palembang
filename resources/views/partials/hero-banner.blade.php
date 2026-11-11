@@ -4,7 +4,8 @@
     'badge' => '',
     'title' => '',
     'highlight' => '',
-    'breadcrumbs' => []
+    'breadcrumbs' => [],
+    'bgImage' => ''
 ])
 
 @php
@@ -13,13 +14,17 @@
     $title = $title ?? '';
     $highlight = $highlight ?? '';
     $breadcrumbs = $breadcrumbs ?? [];
+    $bgImage = $bgImage ?? '';
 
-    // Ambil data menu berdasarkan slug
-    $menu = \App\Models\AppMenu::where('slug', $slug)->first();
-    $bgHeader = trim($menu->background_header ?? '');
+    // Resolusi Gambar Latar Belakang (Dukungan Custom bgImage / AppMenu)
+    if (!empty($bgImage) && $bgImage !== '-') {
+        $bgHeader = trim($bgImage);
+    } else {
+        $menu = \App\Models\AppMenu::where('slug', $slug)->first();
+        $bgHeader = trim($menu->background_header ?? '');
+    }
 
-    // Resolusi Path Gambar Background Header
-    if (empty($bgHeader)) {
+    if (empty($bgHeader) || $bgHeader === '-') {
         $headerBgUrl = asset('images/slider-ppdb.jpg');
     } elseif (str_starts_with($bgHeader, 'http://') || str_starts_with($bgHeader, 'https://')) {
         $headerBgUrl = $bgHeader;
@@ -31,29 +36,29 @@
         $headerBgUrl = asset('storage/' . $bgHeader);
     }
 
-    $textColorClass = !empty($menu->font_color) ? $menu->font_color : 'text-white';
+    $textColorClass = 'text-white';
     $displayTitle = !empty($title) ? $title : ($menu->title ?? '');
 @endphp
 
 <section class="relative bg-slate-950 text-white overflow-hidden h-[300px] sm:h-[400px] lg:h-[480px] flex items-center">
-    <!-- GAMBAR BACKGROUND HEADER (PERSIS SAMA DENGAN SEKOLAH.BLADE.PHP) -->
+    <!-- GAMBAR BACKGROUND HEADER -->
     <div class="absolute inset-0 z-0">
         <img src="{{ $headerBgUrl }}"
              alt="Header Background"
              class="w-full h-full object-cover object-center"
              onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
 
-        <!-- OVERLAY SLATE NETRAL -->
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/60 to-transparent z-10"></div>
+        <!-- OVERLAY SLATE GELAP PEKAT (KONSISTEN UNTUK SEMUA HALAMAN) -->
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-950/50 z-10"></div>
     </div>
 
     <!-- KONTEN TEKS HERO & BREADCRUMB -->
     <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
         @if(!empty($breadcrumbs) && is_array($breadcrumbs))
-            <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center flex-wrap drop-shadow-sm">
+            <nav class="flex text-xs font-semibold text-slate-300 mb-4 gap-2 items-center flex-wrap drop-shadow-sm">
                 <a href="/" class="hover:text-amber-400 transition">Beranda</a>
                 @foreach($breadcrumbs as $crumb)
-                    <span>/</span>
+                    <span class="text-slate-500">/</span>
                     @if(!empty($crumb['url']) && $crumb['url'] !== '#')
                         <a href="{{ $crumb['url'] }}" class="hover:text-amber-400 transition">{{ $crumb['label'] }}</a>
                     @else

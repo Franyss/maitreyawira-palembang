@@ -29,72 +29,18 @@
         </header>
     @endif
 
-    {{-- 2. HERO BANNER SEKOLAH (KONSISTEN DENGAN HERO-BANNER PARTIAL) --}}
-    @php
-        // Ambil data background header dari unit sekolah atau fallback dari AppMenu (slug: sekolah)
-        $menu = \App\Models\AppMenu::where('slug', 'sekolah')->first();
-        $bgHeader = trim($school->sch_background_header ?? $menu->background_header ?? '');
-
-        if (empty($bgHeader) || $bgHeader === '-') {
-            $headerBgUrl = asset('images/slider-ppdb.jpg');
-        } elseif (str_starts_with($bgHeader, 'http://') || str_starts_with($bgHeader, 'https://')) {
-            $headerBgUrl = $bgHeader;
-        } elseif (file_exists(public_path('storage/' . $bgHeader))) {
-            $headerBgUrl = asset('storage/' . $bgHeader);
-        } elseif (file_exists(public_path($bgHeader))) {
-            $headerBgUrl = asset($bgHeader);
-        } else {
-            $headerBgUrl = asset('storage/' . $bgHeader);
-        }
-
-        $textColorClass = !empty($school->sch_font_color) ? $school->sch_font_color : 'text-white';
-
-        // Definisi Variabel Teks Header Khusus Sekolah
-        $badge = 'PROFIL UNIT SEKOLAH';
-        $displayTitle = 'Profil & Informasi';
-        $highlight = $school->sch_name ?? '';
-    @endphp
-
-    <section class="relative bg-slate-950 text-white overflow-hidden h-[300px] sm:h-[400px] lg:h-[480px] flex items-center">
-        <!-- GAMBAR BACKGROUND HEADER -->
-        <div class="absolute inset-0 z-0">
-            <img src="{{ $headerBgUrl }}" alt="{{ $school->sch_name }}"
-                class="w-full h-full object-cover object-center"
-                onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
-
-            <!-- OVERLAY SLATE GELAP AGAR TEKS BACKGROUND TIDAK BENTROK -->
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-slate-950/40 z-10"></div>
-        </div>
-
-        <!-- KONTEN TEKS HERO & BREADCRUMB -->
-        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
-            <nav class="flex text-xs font-semibold text-slate-300 mb-4 gap-2 items-center flex-wrap drop-shadow-sm">
-                <a href="/" class="hover:text-amber-400 transition">Beranda</a>
-                <span class="text-slate-400">/</span>
-                <span class="text-slate-400">Sekolah</span>
-                <span class="text-slate-400">/</span>
-                <span class="text-amber-400 font-bold">{{ $school->sch_name }}</span>
-            </nav>
-
-            <div class="max-w-3xl space-y-4">
-                @if (!empty($badge))
-                    <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-amber-500/10 text-amber-400 border border-amber-500/30 uppercase tracking-widest shadow-xs">
-                        {{ $badge }}
-                    </span>
-                @endif
-
-                <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight {{ $textColorClass }} drop-shadow-lg">
-                    {{ $displayTitle }}
-                    @if (!empty($highlight))
-                        <br>
-                        <span class="text-amber-400 font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                            {{ $highlight }}
-                        </span>
-                    @endif
-                </h1>
-            </div>
-        </div>
-    </section>
+    {{-- 2. HERO BANNER SEKOLAH (DIPANGGIL DARI PARTIAL KONSISTEN) --}}
+    @include('partials.hero-banner', [
+        'slug' => 'sekolah',
+        'badge' => 'PROFIL UNIT SEKOLAH',
+        'title' => 'Profil & Informasi',
+        'highlight' => $school->sch_name ?? '',
+        'bgImage' => $school->sch_background_header ?? '',
+        'breadcrumbs' => [
+            ['label' => 'Sekolah', 'url' => '#'],
+            ['label' => $school->sch_name ?? '', 'url' => '#']
+        ]
+    ])
 
     {{-- 3. KONTEN UTAMA & INFORMASI KONTAK UNIT --}}
     <section class="py-16 bg-slate-50 flex-grow">
