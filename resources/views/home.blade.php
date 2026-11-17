@@ -7,10 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sekolah Maitreyawira Palembang | Official Website</title>
 
-    {{-- CSS AOS & Tailwind --}}
+    {{-- CSS AOS, FontAwesome & Tailwind --}}
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/app.css')
+    <script src="https://cdn.tailwindcss.com"></script>
 
     {{-- Alpine.js & Typed.js --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -44,27 +45,27 @@
                 @foreach($sliders as $index => $slider)
                     @php
                         $slideNum = $index + 1;
-                        $photo = trim($slider->photo ?? '');
+                        $photo = ltrim(trim($slider->photo ?? ''), '/');
                         $fileName = basename($photo);
 
                         if (empty($photo)) {
                             $imgUrl = asset('images/slider-ppdb.jpg');
                         } elseif (str_starts_with($photo, 'http://') || str_starts_with($photo, 'https://')) {
                             $imgUrl = $photo;
-                        } elseif (str_starts_with($photo, 'uploads/')) {
-                            $imgUrl = file_exists(public_path('storage/' . $photo)) ? asset('storage/' . $photo) : asset($photo);
+                        } elseif (file_exists(public_path($photo))) {
+                            $imgUrl = asset($photo);
+                        } elseif (file_exists(public_path('storage/' . $photo))) {
+                            $imgUrl = asset('storage/' . $photo);
+                        } elseif (!empty($fileName) && file_exists(public_path('uploads/app_slider/' . $fileName))) {
+                            $imgUrl = asset('uploads/app_slider/' . $fileName);
+                        } elseif (!empty($fileName) && file_exists(public_path('storage/uploads/app_slider/' . $fileName))) {
+                            $imgUrl = asset('storage/uploads/app_slider/' . $fileName);
+                        } elseif (!empty($fileName) && file_exists(public_path('uploads/slider/' . $fileName))) {
+                            $imgUrl = asset('uploads/slider/' . $fileName);
+                        } elseif (!empty($fileName) && file_exists(public_path('images/' . $fileName))) {
+                            $imgUrl = asset('images/' . $fileName);
                         } else {
-                            if (file_exists(public_path('storage/uploads/app_slider/' . $fileName))) {
-                                $imgUrl = asset('storage/uploads/app_slider/' . $fileName);
-                            } elseif (file_exists(public_path('uploads/app_slider/' . $fileName))) {
-                                $imgUrl = asset('uploads/app_slider/' . $fileName);
-                            } elseif (file_exists(public_path('uploads/slider/' . $fileName))) {
-                                $imgUrl = asset('uploads/slider/' . $fileName);
-                            } elseif (file_exists(public_path('images/' . $fileName))) {
-                                $imgUrl = asset('images/' . $fileName);
-                            } else {
-                                $imgUrl = asset('storage/uploads/app_slider/' . $fileName);
-                            }
+                            $imgUrl = asset('images/slider-ppdb.jpg');
                         }
                     @endphp
 
@@ -79,7 +80,7 @@
                          @if($slideNum > 1) style="display: none;" @endif>
 
                         <div class="relative w-full h-full">
-                            <!-- GAMBAR SLIDER (OBJECT-FILL AGAR BANNER TAMPIL 100% FULL TANPA TERPOTONG) -->
+                            <!-- GAMBAR SLIDER -->
                             <a href="{{ $slider->btn_link ?: '#' }}" class="block w-full h-full">
                                 <img src="{{ $imgUrl }}"
                                      alt="{{ $slider->title ?? 'Slider Sekolah Maitreyawira' }}"
@@ -87,7 +88,7 @@
                                      onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
                             </a>
 
-                            <!-- OVERLAY TEKS (HALUS & TRANSPARAN AGAR TIDAK MENUTUPI GAMBAR BANNER) -->
+                            <!-- OVERLAY TEKS -->
                             @if(!empty($slider->title) || !empty($slider->description))
                                 <div class="absolute inset-0 bg-gradient-to-r from-slate-950/40 via-transparent to-transparent pointer-events-none">
                                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
@@ -221,13 +222,13 @@
 
             @php
                 $getLogoUrl = function($key, $default) use ($configs) {
-                    $val = trim($configs[$key] ?? '');
+                    $val = ltrim(trim($configs[$key] ?? ''), '/');
                     if (empty($val)) return asset($default);
                     if (str_starts_with($val, 'http://') || str_starts_with($val, 'https://')) return $val;
-                    if (file_exists(public_path('storage/' . $val))) return asset('storage/' . $val);
                     if (file_exists(public_path($val))) return asset($val);
+                    if (file_exists(public_path('storage/' . $val))) return asset('storage/' . $val);
                     if (file_exists(public_path('uploads/app_config/' . basename($val)))) return asset('uploads/app_config/' . basename($val));
-                    return asset('storage/' . $val);
+                    return asset($default);
                 };
             @endphp
 
