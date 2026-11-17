@@ -22,14 +22,14 @@
     {{-- 1. PANGGIL PARTIAL NAVBAR --}}
     @include('partials.navbar')
 
-    {{-- 2. HERO SLIDER SECTION (FULL-WIDTH EDGE-TO-EDGE STYLE ITB) --}}
+    {{-- 2. HERO SLIDER SECTION (FULL-WIDTH & FULL-IMAGE DISPLAY) --}}
     <section class="relative w-full bg-slate-900 overflow-hidden">
 
         @php
             $totalSlides = (isset($sliders) && $sliders->count() > 0) ? $sliders->count() : 2;
         @endphp
 
-        <!-- SLIDER CONTAINER RESPONSIF EDGE-TO-EDGE -->
+        <!-- SLIDER CONTAINER RESPONSIF DENGAN RASIO BANNER FULL -->
         <div x-data="{
                 activeSlide: 1,
                 totalSlides: {{ $totalSlides }},
@@ -37,7 +37,7 @@
                 prev() { this.activeSlide = this.activeSlide === 1 ? this.totalSlides : this.activeSlide - 1 }
              }"
              x-init="setInterval(() => { next() }, 7000)"
-             class="relative w-full h-[450px] sm:h-[550px] lg:h-[650px] overflow-hidden group">
+             class="relative w-full h-[260px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[650px] overflow-hidden group bg-slate-950">
 
             @if(isset($sliders) && $sliders->count() > 0)
                 {{-- ITERASI DINAMIS DARI DATABASE app_slider --}}
@@ -70,31 +70,31 @@
 
                     <div x-show="activeSlide === {{ $slideNum }}"
                          x-transition:enter="transition ease-out duration-700"
-                         x-transition:enter-start="opacity-0 scale-105"
+                         x-transition:enter-start="opacity-0 scale-102"
                          x-transition:enter-end="opacity-100 scale-100"
                          x-transition:leave="transition ease-in duration-500"
                          x-transition:leave-start="opacity-100 scale-100"
-                         x-transition:leave-end="opacity-0 scale-95"
+                         x-transition:leave-end="opacity-0 scale-98"
                          class="absolute inset-0 w-full h-full z-10"
                          @if($slideNum > 1) style="display: none;" @endif>
 
                         <div class="relative w-full h-full">
-                            <!-- GAMBAR SLIDER (FULL MEMANJANG KIRI KANAN) -->
+                            <!-- GAMBAR SLIDER (OBJECT-FILL AGAR BANNER TAMPIL 100% FULL TANPA TERPOTONG) -->
                             <a href="{{ $slider->btn_link ?: '#' }}" class="block w-full h-full">
                                 <img src="{{ $imgUrl }}"
                                      alt="{{ $slider->title ?? 'Slider Sekolah Maitreyawira' }}"
-                                     class="w-full h-full object-cover object-center"
+                                     class="w-full h-full object-fill object-center"
                                      onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
                             </a>
 
-                            <!-- OVERLAY TEKS -->
+                            <!-- OVERLAY TEKS (HALUS & TRANSPARAN AGAR TIDAK MENUTUPI GAMBAR BANNER) -->
                             @if(!empty($slider->title) || !empty($slider->description))
-                                <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent pointer-events-none">
+                                <div class="absolute inset-0 bg-gradient-to-r from-slate-950/40 via-transparent to-transparent pointer-events-none">
                                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
-                                        <div class="max-w-2xl space-y-3 sm:space-y-4 pointer-events-auto">
+                                        <div class="max-w-xl space-y-2 sm:space-y-4 pointer-events-auto">
 
                                             @if(!empty($slider->title))
-                                                <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight drop-shadow-md">
+                                                <h2 class="text-xl sm:text-3xl lg:text-5xl font-black text-white leading-tight drop-shadow-[0_4px_6px_rgba(0,0,0,0.8)]">
                                                     {{ $slider->title }}
                                                 </h2>
                                             @endif
@@ -125,15 +125,15 @@
                                                             if (val === {{ $slideNum }}) { startTyping(); }
                                                         });
                                                    "
-                                                   class="text-amber-300 text-sm sm:text-base leading-relaxed hidden sm:block font-medium drop-shadow-sm min-h-[2.5rem]">
+                                                   class="text-amber-300 text-xs sm:text-sm lg:text-base leading-relaxed hidden sm:block font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] min-h-[2rem]">
                                                     <span x-text="displayedText"></span>
                                                     <span x-show="displayedText.length < fullText.length" class="inline-block w-0.5 h-4 bg-amber-400 animate-pulse ml-0.5 align-middle"></span>
                                                 </p>
                                             @endif
 
                                             @if(!empty($slider->btn_text) && !empty($slider->btn_link))
-                                                <div class="pt-2 sm:pt-4">
-                                                    <a href="{{ $slider->btn_link }}" class="inline-flex items-center gap-2 px-6 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-lg transition duration-200">
+                                                <div class="pt-1 sm:pt-3">
+                                                    <a href="{{ $slider->btn_link }}" class="inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-xl transition duration-200 hover:scale-105">
                                                         <span>{{ $slider->btn_text }}</span>
                                                         <span>&rarr;</span>
                                                     </a>
@@ -151,19 +151,19 @@
                 {{-- FALLBACK STATIS SLIDER FULL WIDTH --}}
                 <div x-show="activeSlide === 1" class="absolute inset-0 w-full h-full z-10">
                     <a href="/pendaftaran-siswa" class="block w-full h-full">
-                        <img src="{{ asset('images/slider-ppdb.jpg') }}" alt="Banner PPDB" class="w-full h-full object-cover">
+                        <img src="{{ asset('images/slider-ppdb.jpg') }}" alt="Banner PPDB" class="w-full h-full object-fill">
                     </a>
                 </div>
                 <div x-show="activeSlide === 2" class="absolute inset-0 w-full h-full z-10" style="display: none;">
                     <div class="relative w-full h-full">
-                        <img src="{{ asset('images/slider-anak.jpg') }}" alt="Aktivitas Siswa" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent">
+                        <img src="{{ asset('images/slider-anak.jpg') }}" alt="Aktivitas Siswa" class="w-full h-full object-fill">
+                        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/40 via-transparent to-transparent">
                             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
-                                <div class="max-w-2xl space-y-4">
+                                <div class="max-w-xl space-y-4">
                                     <span class="inline-block px-3.5 py-1 bg-amber-400 text-[#1b2a6b] font-black text-xs rounded-full uppercase tracking-wider">
                                         Visi & Komitmen Pendidikan
                                     </span>
-                                    <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
+                                    <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight drop-shadow-lg">
                                         Mendidik Generasi yang <br>
                                         <span id="typed-text" class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 border-r-2 border-amber-400 pr-1"></span>
                                     </h2>
@@ -177,27 +177,27 @@
             <!-- PANAH NAVIGASI DI UJUNG KIRI & KANAN LAYAR -->
             <button type="button"
                     @click.prevent="prev()"
-                    class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-900/60 hover:bg-amber-400 hover:text-slate-950 text-white flex items-center justify-center backdrop-blur-md transition duration-300 shadow-xl z-30 cursor-pointer">
+                    class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-slate-900/40 hover:bg-amber-400 hover:text-slate-950 text-white flex items-center justify-center backdrop-blur-sm transition duration-300 shadow-xl z-30 cursor-pointer">
                 ❮
             </button>
             <button type="button"
                     @click.prevent="next()"
-                    class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-900/60 hover:bg-amber-400 hover:text-slate-950 text-white flex items-center justify-center backdrop-blur-md transition duration-300 shadow-xl z-30 cursor-pointer">
+                    class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-slate-900/40 hover:bg-amber-400 hover:text-slate-950 text-white flex items-center justify-center backdrop-blur-sm transition duration-300 shadow-xl z-30 cursor-pointer">
                 ❯
             </button>
 
             <!-- INDIKATOR DOTS -->
-            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-30 bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+            <div class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-30 bg-slate-900/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20">
                 @if(isset($sliders) && $sliders->count() > 0)
                     @foreach($sliders as $index => $slider)
                         <button type="button"
                                 @click.prevent="activeSlide = {{ $index + 1 }}"
-                                :class="activeSlide === {{ $index + 1 }} ? 'bg-amber-400 w-8' : 'bg-white/60 hover:bg-white w-2.5'"
+                                :class="activeSlide === {{ $index + 1 }} ? 'bg-amber-400 w-7' : 'bg-white/60 hover:bg-white w-2.5'"
                                 class="h-2.5 rounded-full transition-all duration-300 cursor-pointer"></button>
                     @endforeach
                 @else
-                    <button type="button" @click.prevent="activeSlide = 1" :class="activeSlide === 1 ? 'bg-amber-400 w-8' : 'bg-white/60 hover:bg-white w-2.5'" class="h-2.5 rounded-full transition-all duration-300 cursor-pointer"></button>
-                    <button type="button" @click.prevent="activeSlide = 2" :class="activeSlide === 2 ? 'bg-amber-400 w-8' : 'bg-white/60 hover:bg-white w-2.5'" class="h-2.5 rounded-full transition-all duration-300 cursor-pointer"></button>
+                    <button type="button" @click.prevent="activeSlide = 1" :class="activeSlide === 1 ? 'bg-amber-400 w-7' : 'bg-white/60 hover:bg-white w-2.5'" class="h-2.5 rounded-full transition-all duration-300 cursor-pointer"></button>
+                    <button type="button" @click.prevent="activeSlide = 2" :class="activeSlide === 2 ? 'bg-amber-400 w-7' : 'bg-white/60 hover:bg-white w-2.5'" class="h-2.5 rounded-full transition-all duration-300 cursor-pointer"></button>
                 @endif
             </div>
 
@@ -462,7 +462,7 @@
         </div>
     </section>
 
-    {{-- 7. SEKSI KHUSUS PRESTASI TERKINI (KONSISTEN DENGAN TEMA TERANG HALAMAN APLIKASI) --}}
+    {{-- 7. SEKSI KHUSUS PRESTASI TERKINI --}}
     <section id="prestasi" class="py-20 bg-slate-50 border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-wrap justify-between items-end mb-12 gap-4" data-aos="fade-up">
@@ -476,7 +476,6 @@
                 </div>
             </div>
 
-            <!-- GRID 2 KOLOM KHUSUS UNTUK 2 ACHIEVEMENT TERBARU -->
             <div class="grid md:grid-cols-2 gap-8">
                 @if(isset($latestAchievements) && $latestAchievements->count() > 0)
                     @foreach($latestAchievements as $index => $achieve)
