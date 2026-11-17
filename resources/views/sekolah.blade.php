@@ -29,65 +29,73 @@
         </header>
     @endif
 
-    {{-- 2. HERO BANNER SEKOLAH (DENGAN TINGGI RESPOSIF PROPORSI 1920 x 480 PX) --}}
+    {{-- 2. HERO BANNER SEKOLAH (FULL-IMAGE DISPLAY TANPA TERPOTONG) --}}
     @php
-        // Ambil data background header dari AppMenu (slug: sekolah) atau fallback dari data sekolah
+        $rawSchoolBg = trim($school->sch_background_header ?? '');
         $menu = \App\Models\AppMenu::where('slug', 'sekolah')->first();
-        $bgHeader = trim($menu->background_header ?? $school->sch_background_header ?? '');
+        $rawMenuBg = trim($menu->background_header ?? '');
+
+        // Prioritaskan sch_background_header milik unit sekolah, fallback ke menu sekolah
+        $bgHeader = (!empty($rawSchoolBg) && $rawSchoolBg !== '-') ? $rawSchoolBg : $rawMenuBg;
+        $fileName = basename($bgHeader);
 
         if (empty($bgHeader) || $bgHeader === '-') {
             $headerBgUrl = asset('images/slider-ppdb.jpg');
         } elseif (str_starts_with($bgHeader, 'http://') || str_starts_with($bgHeader, 'https://')) {
             $headerBgUrl = $bgHeader;
-        } elseif (file_exists(public_path('storage/' . $bgHeader))) {
-            $headerBgUrl = asset('storage/' . $bgHeader);
-        } elseif (file_exists(public_path($bgHeader))) {
-            $headerBgUrl = asset($bgHeader);
+        } elseif (file_exists(public_path(ltrim($bgHeader, '/')))) {
+            $headerBgUrl = asset(ltrim($bgHeader, '/'));
+        } elseif (file_exists(public_path('storage/' . ltrim($bgHeader, '/')))) {
+            $headerBgUrl = asset('storage/' . ltrim($bgHeader, '/'));
+        } elseif (!empty($fileName) && file_exists(public_path('uploads/school/' . $fileName))) {
+            $headerBgUrl = asset('uploads/school/' . $fileName);
+        } elseif (!empty($fileName) && file_exists(public_path('storage/uploads/school/' . $fileName))) {
+            $headerBgUrl = asset('storage/uploads/school/' . $fileName);
+        } elseif (!empty($fileName) && file_exists(public_path('uploads/app_menu/' . $fileName))) {
+            $headerBgUrl = asset('uploads/app_menu/' . $fileName);
         } else {
-            $headerBgUrl = asset('storage/' . $bgHeader);
+            $headerBgUrl = asset('uploads/school/' . $fileName);
         }
 
-        $textColorClass = !empty($school->sch_font_color) ? $school->sch_font_color : 'text-white';
-
-        // Definisi Variabel Teks Header Khusus Sekolah
         $badge = 'PROFIL UNIT SEKOLAH';
         $displayTitle = 'Profil & Informasi';
         $highlight = $school->sch_name ?? '';
     @endphp
 
-    <section class="relative bg-slate-950 text-white overflow-hidden h-[300px] sm:h-[400px] lg:h-[480px] flex items-center">
-        <!-- GAMBAR BACKGROUND HEADER -->
+    <section class="relative bg-slate-950 text-white overflow-hidden w-full h-[260px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[650px] flex items-center">
+        <!-- GAMBAR BACKGROUND HEADER (OBJECT-FILL AGAR TAMPIL 100% UTUH) -->
         <div class="absolute inset-0 z-0">
-            <img src="{{ $headerBgUrl }}" alt="{{ $school->sch_name }}"
-                class="w-full h-full object-cover object-center"
-                onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
+            <img src="{{ $headerBgUrl }}"
+                 alt="{{ $school->sch_name }}"
+                 class="w-full h-full object-fill object-center"
+                 onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
 
-            <!-- OVERLAY SLATE NETRAL -->
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/60 to-transparent z-10"></div>
+            <!-- OVERLAY GRADIENT HALUS -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/45 to-transparent z-10"></div>
         </div>
 
         <!-- KONTEN TEKS HERO & BREADCRUMB -->
         <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
-            <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center flex-wrap drop-shadow-sm">
+            <nav class="flex text-xs font-semibold text-slate-300 mb-4 gap-2 items-center flex-wrap drop-shadow-md">
                 <a href="/" class="hover:text-amber-400 transition">Beranda</a>
                 <span>/</span>
-                <span class="text-slate-400">Sekolah</span>
+                <span class="text-slate-300">Sekolah</span>
                 <span>/</span>
                 <span class="text-amber-400 font-bold">{{ $school->sch_name }}</span>
             </nav>
 
             <div class="max-w-3xl space-y-4">
                 @if (!empty($badge))
-                    <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-amber-500/10 text-amber-400 border border-amber-500/30 uppercase tracking-widest shadow-xs">
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-amber-500/20 text-amber-300 border border-amber-400/30 uppercase tracking-widest shadow-xs backdrop-blur-md">
                         {{ $badge }}
                     </span>
                 @endif
 
-                <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight {{ $textColorClass }} drop-shadow-lg">
+                <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]">
                     {{ $displayTitle }}
                     @if (!empty($highlight))
                         <br>
-                        <span class="text-amber-400 font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                        <span class="text-amber-400 font-black drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]">
                             {{ $highlight }}
                         </span>
                     @endif
@@ -115,7 +123,7 @@
                                 } elseif (file_exists(public_path('storage/' . $school->sch_img))) {
                                     $schImgUrl = asset('storage/' . $school->sch_img);
                                 } else {
-                                    $schImgUrl = asset('storage/' . $school->sch_img);
+                                    $schImgUrl = asset('uploads/school/' . $imgName);
                                 }
                             @endphp
                             <div class="overflow-hidden rounded-xl border border-slate-100 shadow-xs max-h-[380px]"
